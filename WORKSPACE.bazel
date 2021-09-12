@@ -1,0 +1,33 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+
+
+all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
+http_archive(
+    name = "libcheck",
+    url = "https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz",
+    sha256 = "a8de4e0bacfb4d76dd1c618ded263523b53b85d92a146d8835eb1a52932fa20a",
+    strip_prefix = "check-0.15.2",
+    build_file_content = all_content,
+)
+
+
+
+http_archive(
+    name = "rules_foreign_cc",
+    # TODO: Get the latest sha256 value from a bazel debug message or the latest 
+    #       release on the releases page: https://github.com/bazelbuild/rules_foreign_cc/releases
+    #
+    # sha256 = "...",
+    sha256 = "ed8068eea78cdccb8a638b3b4b49dd333db01ec83879f3fcd460cc8b6aeaa0c6",
+    strip_prefix = "rules_foreign_cc-0.5.0",
+    url = "https://codeload.github.com/bazelbuild/rules_foreign_cc/tar.gz/0.5.0",
+    type="tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+
+
+rules_foreign_cc_dependencies()
+

@@ -1,0 +1,14 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "tests",
+    srcs = [
+        "check_main.c",
+        "check_macros.h",
+        "core_test.h",
+        "core_test.c",
+    ],
+    deps = ["//:libcheck"],
+)
+
+

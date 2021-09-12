@@ -1,0 +1,8 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+cmake(
+    name = "libcheck",
+    lib_source = "@libcheck//:all",
+    out_static_libs = ["libcheck.a"],
+    visibility = ["//visibility:public"],
+)
