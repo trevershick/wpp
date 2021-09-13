@@ -1,1 +1,6 @@
-~/workspaces/primary/
+[workspaces]
+~/workspaces/primary=<first_dir>
+
+[testfiles]
+~/workspaces/primary=Dougie
+~/wpp=Barnie
