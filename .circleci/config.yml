@@ -10,7 +10,7 @@ commands:
       - run:
           name: Add Bazel Apt repository
           command: |
-            sudo apt install curl gnupg librt
+            sudo apt install curl gnupg
             curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
             sudo mv bazel.gpg /etc/apt/trusted.gpg.d/
             echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
@@ -32,8 +32,14 @@ jobs:
       - checkout
       - setup-bazel
       - run:
-          name: "Make"
-          command: "make"
+          name: "Build CheckLib"
+          command: "bazel build //:libcheck"
+      - run:
+          name: "Build wp"
+          command: "make wp"
+      - run:
+          name: "Test"
+          command: "make test"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
