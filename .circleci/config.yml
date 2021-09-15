@@ -32,8 +32,14 @@ jobs:
       - checkout
       - setup-bazel
       - run:
-          name: "Make"
-          command: "make"
+          name: "Build CheckLib"
+          command: "bazel build //:libcheck"
+      - run:
+          name: "Build wp"
+          command: "make wp"
+      - run:
+          name: "Test"
+          command: "make test"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
