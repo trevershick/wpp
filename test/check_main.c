@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "core_test.h"
+#include "format_test.h"
 
 #define ADD_SUITE(runner, factory_method)                                                                              \
   {                                                                                                                    \
@@ -16,7 +16,7 @@ int main(void) {
   struct Suite *s = suite_create(">");
   SRunner *sr = srunner_create(s);
 
-  ADD_SUITE(sr, make_core_test_suite);
+  ADD_SUITE(sr, make_format_test_suite);
 
   srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, "tests.xml");

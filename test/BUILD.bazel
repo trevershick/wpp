@@ -5,10 +5,14 @@ cc_test(
     srcs = [
         "check_main.c",
         "check_macros.h",
-        "core_test.h",
-        "core_test.c",
+        "format_test.h",
+        "format_test.c",
     ],
-    deps = ["//:libcheck"],
+    deps = [
+      "//:libcheck",
+      "//src:format",
+    ],
+    linkstatic = True,
 )
 
 

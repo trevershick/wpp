@@ -1,5 +1,5 @@
-#ifndef _m_wp_h
-#define _m_wp_h
+#ifndef _m_context_h
+#define _m_context_h
 
 #include <limits.h>
 #include <stdio.h>
@@ -14,7 +14,6 @@ struct Context {
 
 int init_context(struct Context*);
 void destroy_context(struct Context*);
-void handle_match(struct Context*, const char* directive);
+int parse_arguments(int, char **, struct Context *);
 
-int is_section_header(const char*);
 #endif
