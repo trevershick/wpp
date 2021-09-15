@@ -1,12 +1,14 @@
-default: build
+default: test
 
 TEST_OPTS := --test_output=all --sandbox_debug --test_verbose_timeout_warnings
 TESTS 		:= //...
 
-.PHONY: wp test debug lldb
+.PHONY: wp test debug lldb all
 
-build:
-	bazel build //src:$@
+all: wp test
+
+wp:
+	bazel build //src:wp
 
 # for mac, we have to preserve the sandbox because the debug symbols are created
 # in the sandbox and lldb can't find them if the sandbox disappears
