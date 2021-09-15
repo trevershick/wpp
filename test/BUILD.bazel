@@ -12,7 +12,18 @@ cc_test(
       "//:libcheck",
       "//src:format",
     ],
+    linkopts = select({
+        ":linux": ["-lrt"],
+        "//conditions:default": [],
+    }),
     linkstatic = True,
+)
+
+config_setting(
+    name = "linux",
+    constraint_values = [
+        "@bazel_tools//platforms:linux",
+    ],
 )
 
 
