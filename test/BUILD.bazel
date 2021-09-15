@@ -13,7 +13,7 @@ cc_test(
       "//src:format",
     ],
     linkopts = select({
-        ":linux": ["-lrt"],
+        ":linux": ["-lrt","-lpthread"],
         "//conditions:default": [],
     }),
     linkstatic = True,
