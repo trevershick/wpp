@@ -1,8 +1,22 @@
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
 
-cmake(
+configure_make(
     name = "libcheck",
+    autoreconf = True,
+    configure_command = "configure",
+    configure_in_place = True,
     lib_source = "@libcheck//:all",
     out_static_libs = ["libcheck.a"],
     visibility = ["//visibility:public"],
+    env = {
+      "AR": "",
+    },
 )
+
+#cmake(
+#    name = "libcheck",
+#    lib_source = "@libcheck//:all",
+#    out_static_libs = ["libcheck.a"],
+#    visibility = ["//visibility:public"],
+#)
