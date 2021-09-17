@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <stdio.h>
+#include <memory.h>
 
 #include "format_test.h"
 
@@ -20,7 +21,17 @@ int main(void) {
   ADD_SUITE(sr, make_format_test_suite);
 
   char xml_output[PATH_MAX];
-  realpath("results.xml", xml_output);
+  memset(xml_output, 0, PATH_MAX);
+  const char* outputs_dir = getenv("TEST_UNDECLARED_OUTPUTS_DIR");
+  if (outputs_dir) {
+    sprintf(xml_output, "%s/results.xml", outputs_dir);  
+  } else {
+    sprintf(xml_output, "results.xml");  
+  }
+
+  char output_path[PATH_MAX];
+  memset(output_path, 0, PATH_MAX);
+  realpath(output_path, xml_output);
   fprintf(stdout, "Writing test output to : %s\n", xml_output);
   //srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, xml_output);
