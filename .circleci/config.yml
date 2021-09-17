@@ -40,6 +40,11 @@ jobs:
       - run:
           name: "Test"
           command: "make test"
+      - run:
+          name: "Unzip Bazel Test Results"
+          command: "unzip -d bazel-testlogs/test/tests/test.outputs/ bazel-testlogs/test/tests/test.outputs/outputs.zip"
+      - store_test_results:
+          path: bazel-testlogs/test/tests/
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
