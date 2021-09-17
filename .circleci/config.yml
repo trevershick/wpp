@@ -42,7 +42,7 @@ jobs:
           command: "make test"
       - run:
           name: "Unzip Bazel Test Results"
-          command: "unzip bazel-testlogs/test/tests/test.outputs/outputs.zip"
+          command: "unzip -d bazel-testlogs/test/tests bazel-testlogs/test/tests/test.outputs/outputs.zip"
       - store_test_results:
           path: bazel-testlogs/test/tests
 # Invoke jobs via workflows
