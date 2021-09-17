@@ -1,5 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <stdio.h>
 
 #include "format_test.h"
@@ -18,10 +19,8 @@ int main(void) {
 
   ADD_SUITE(sr, make_format_test_suite);
 
-  const char* xml_output = getenv("XML_OUTPUT_FILE");
-  if (!xml_output) {
-    xml_output = "tests.xml";
-  }
+  char xml_output[PATH_MAX];
+  realpath("results.xml", xml_output);
   fprintf(stdout, "Writing test output to : %s\n", xml_output);
   //srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, xml_output);
