@@ -1,5 +1,4 @@
-#include "format_test.h"
-
+#include <check.h>
 #include <check_stdint.h>
 #include <errno.h>
 #include <stdlib.h>

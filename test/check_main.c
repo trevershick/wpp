@@ -4,14 +4,14 @@
 #include <stdio.h>
 #include <memory.h>
 
-#include "format_test.h"
-
 #define ADD_SUITE(runner, factory_method)                                                                              \
   {                                                                                                                    \
     struct Suite *suite = factory_method();                                                                            \
     srunner_add_suite(runner, suite);                                                                                  \
   }
 
+
+struct Suite *make_format_test_suite();
 
 
 int main(void) {
