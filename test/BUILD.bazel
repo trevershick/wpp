@@ -6,10 +6,12 @@ cc_test(
         "check_main.c",
         "check_macros.h",
         "format_test.c",
+        "context_test.c",
     ],
     deps = [
       "//:libcheck",
       "//src:format",
+      "//src:context",
     ],
     linkopts = select({
         ":linux": ["-lrt","-lpthread"],
