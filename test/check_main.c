@@ -15,10 +15,8 @@
 
 
 int main(void) {
-  struct Suite *s = suite_create(">");
+  struct Suite *s = make_format_test_suite();
   SRunner *sr = srunner_create(s);
-
-  ADD_SUITE(sr, make_format_test_suite);
 
   char xml_output[PATH_MAX];
   memset(xml_output, 0, PATH_MAX);
@@ -35,6 +33,7 @@ int main(void) {
   fprintf(stdout, "Writing test output to : %s\n", xml_output);
   //srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, xml_output);
+  srunner_set_xml_format(sr, CK_XML_FORMAT_JUNIT);
   srunner_run_all(sr, CK_VERBOSE /*CK_NORMAL*/);
   int number_failed = srunner_ntests_failed(sr);
   srunner_free(sr);

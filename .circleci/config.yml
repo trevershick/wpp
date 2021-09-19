@@ -16,7 +16,7 @@ commands:
             echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
       - run:
           name: Install Bazel from Apt
-          command: sudo apt update && sudo apt install bazel
+          command: sudo apt update && sudo apt install bazel texinfo
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs

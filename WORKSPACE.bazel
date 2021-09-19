@@ -9,6 +9,12 @@ http_archive(
     sha256 = "a8de4e0bacfb4d76dd1c618ded263523b53b85d92a146d8835eb1a52932fa20a",
     strip_prefix = "check-0.15.2",
     build_file_content = all_content,
+    patch_args = [
+      "-p1"
+    ],
+    patches = [
+      "//:0_15_2_junit.patch"
+    ],
 )
 
 
