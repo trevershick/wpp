@@ -36,9 +36,42 @@ cc_library(
     visibility = ["//visibility:public"],
     linkstatic = True,
 )
+cc_library(
+    name = "cmdline",
+    srcs = [
+      "cmdline.c",
+    ],
+    hdrs = [
+      "cmdline.h",
+    ],
+    deps = [
+      ":context",
+      ":rcfile",
+    ],
+    visibility = ["//visibility:public"],
+    linkstatic = True,
+)
+cc_library(
+    name = "rcfile",
+    srcs = [
+      "rcfile.c",
+    ],
+    hdrs = [
+      "rcfile.h",
+    ],
+    deps = [
+      ":context",
+      ":format",
+    ],
+    visibility = ["//visibility:public"],
+    linkstatic = True,
+)
 
 cc_binary(
     name = "wp",
+    copts = [
+      "-O3",
+    ],
     srcs = [
       "main.c"
     ],
@@ -46,6 +79,8 @@ cc_binary(
       ":context",
       ":format",
       ":directives",
+      ":cmdline",
+      ":rcfile",
     ],
     linkstatic = True,
 )

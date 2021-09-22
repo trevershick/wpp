@@ -14,6 +14,4 @@ struct Context {
 
 int init_context(struct Context*);
 void destroy_context(struct Context*);
-int parse_arguments(int, char **, struct Context *);
-
 #endif

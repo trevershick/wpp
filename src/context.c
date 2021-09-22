@@ -1,11 +1,12 @@
 #include "context.h"
 
-#include <ctype.h>
+#include <libgen.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <wordexp.h>
+#include <sys/stat.h>
 
 void destroy_context(struct Context *context) {
   if (context->file) {
@@ -13,11 +14,44 @@ void destroy_context(struct Context *context) {
   }
 }
 
-int init_context(struct Context *context) {
-  if (getcwd(context->cwd, sizeof(context->cwd)) == NULL) {
-    perror("getcwd");
-    return 1;
+int resolve_cwd(struct Context *context) {
+  if (strlen(context->cwd)) {
+   struct stat s;
+    char buffer[PATH_MAX];
+    if (realpath(context->cwd, buffer) == NULL) {
+      fprintf(stderr, "couldn't resolve absolute path for %s", context->cwd);
+      return 1;
+    }
+    strncpy(context->cwd, buffer, sizeof(context->cwd));
+
+    if (stat(context->cwd, &s)) {
+      fprintf(stderr, "file/directory does not exists %s", context->cwd);
+      return 1;
+    }
+
+    if ((s.st_mode & S_IFREG) == S_IFREG) {
+      memset(buffer, 0, sizeof(buffer));
+      // it's a regular file, we need to get the parent directory
+      if (dirname_r(context->cwd, buffer)) {
+        strncpy(context->cwd, buffer, sizeof(context->cwd));
+      } else {
+        fprintf(stderr, "Unable to determine the directory for %s", context->cwd);
+        return 1;
+      }
+    } else if ((s.st_mode & S_IFDIR) != S_IFDIR) {
+        fprintf(stderr, "Don't know what the specified file is %s", context->cwd);
+        return 1;
+    }
+  } else {
+    if (getcwd(context->cwd, sizeof(context->cwd)) == NULL) {
+      perror("getcwd");
+      return 1;
+    }
   }
+  return 0;
+}
+
+int resolve_rcfile(struct Context *context) {
   // set any defaults
   if (!strlen(context->rc_file)) {
     strcpy(context->rc_file, "~/workspaces.rc");
@@ -42,34 +76,6 @@ int init_context(struct Context *context) {
   return 0;
 }
 
-int parse_arguments(int argc, char **argv, struct Context *context) {
-  int c;
-  while ((c = getopt(argc, argv, "s:r:")) != -1) {
-    switch (c) {
-    case 'r':
-      strncpy(context->rc_file, optarg, sizeof(context->rc_file));
-      break;
-    case 's':
-      strncpy(context->section, optarg, sizeof(context->section));
-      break;
-    case '?':
-      if (optopt == 's') {
-        fprintf(stderr, "Option -%c requires an argument.\n", optopt);
-      } else if (isprint(optopt)) {
-        fprintf(stderr, "Unknown option `-%c'.\n", optopt);
-      } else {
-        fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
-      }
-      return 1;
-    default:
-      abort();
-    }
-  }
-  if (!strlen(context->section)) {
-    fprintf(stderr, "Section Name (-s) required");
-    return 1;
-  }
-  return 0;
+int init_context(struct Context *context) {
+  return resolve_cwd(context) || resolve_rcfile(context);
 }
-
-
