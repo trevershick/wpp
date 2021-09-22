@@ -30,14 +30,13 @@ int resolve_cwd(struct Context *context) {
     }
 
     if ((s.st_mode & S_IFREG) == S_IFREG) {
-      memset(buffer, 0, sizeof(buffer));
       // it's a regular file, we need to get the parent directory
-      if (dirname_r(context->cwd, buffer)) {
-        strncpy(context->cwd, buffer, sizeof(context->cwd));
-      } else {
+      char* dname = dirname(context->cwd);
+      if (!dname) {
         fprintf(stderr, "Unable to determine the directory for %s", context->cwd);
         return 1;
       }
+      strncpy(context->cwd, dname, sizeof(context->cwd));
     } else if ((s.st_mode & S_IFDIR) != S_IFDIR) {
         fprintf(stderr, "Don't know what the specified file is %s", context->cwd);
         return 1;
