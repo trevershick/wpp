@@ -33,7 +33,7 @@ jobs:
       - setup-bazel
       - run:
           name: "Build CheckLib"
-          command: "bazel build //:libcheck"
+          command: "bazel build //3rdparty:libcheck"
       - run:
           name: "Build wp"
           command: "make wp"
