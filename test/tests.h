@@ -8,8 +8,8 @@
 
 #include "src/context.h"
 
-char out[4096];
-char err[4096];
+extern char out[4096];
+extern char err[4096];
 
 struct Context *test_context(int debug);
 

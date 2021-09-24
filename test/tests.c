@@ -1,5 +1,8 @@
 #include "tests.h"
 
+char out[4096];
+char err[4096];
+
 struct Context *test_context(int debug) {
   struct Context *ctx = calloc(1, sizeof(struct Context));
   memset(out, 0, sizeof(out));
