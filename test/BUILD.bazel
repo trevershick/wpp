@@ -8,7 +8,6 @@ cc_test(
         "rcfile_test.c",
         "context_test.c",
         "tests.c",
-        "check_macros.h",
         "tests.h",
     ],
     deps = [

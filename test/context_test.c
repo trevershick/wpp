@@ -5,8 +5,16 @@
 
 #include "tests.h"
 
-START_TEST(test_init_context_usessetrcfile) {
-  struct Context *c = test_context(0);
+static struct Context *c;
+
+static void setup() { c = test_context(0); }
+
+static void teardown() {
+  if (c)
+    destroy_context(c);
+}
+
+START_TEST(explicitly_set_rcfile) {
   strcpy(c->rc_file, "~/trevers_rc");
   int result = init_context(c);
   ck_assert_msg(strstr(c->rc_file, "trevers_rc") != NULL,
@@ -16,26 +24,24 @@ START_TEST(test_init_context_usessetrcfile) {
                 "RC file should have been 'expanded'");
   // should fail loading the file
   ck_assert_int_eq(1, result);
-  destroy_context(c);
 }
 END_TEST
 
-START_TEST(test_init_context_default) {
-  struct Context *c = test_context(0);
+START_TEST(defaults) {
   init_context(c);
   ck_assert_msg(strstr(c->rc_file, "workspaces.rc") != NULL,
                 "RC file should contain workspaces.rc but is '%s'", c->rc_file);
   ck_assert_msg(strstr(c->rc_file, "~") == NULL,
                 "RC file should have been 'expanded'");
   ck_assert_msg(c->cwd[0] != 0, "CWD should be populated");
-  destroy_context(c);
 }
 END_TEST
 
-START_TEST(test_init_context_opensfile) {
+START_TEST(opens_rcfile) {
   char buffer[80] = {0};
-  // write a file
   {
+    // write the file to read using the context to calculate
+    // the filename to write
     struct Context *c = test_context(0);
     strcpy(c->rc_file, "$TEST_TMPDIR/file_to_open");
     ck_assert_int_eq(1, init_context(c));
@@ -57,12 +63,16 @@ START_TEST(test_init_context_opensfile) {
   }
 }
 END_TEST
-// clang-format off
-CK_SUITE(context_test,
-  CK_CASE(init_context,
-    CK_TEST(test_init_context_default)
-    CK_TEST(test_init_context_usessetrcfile)
-    CK_TEST(test_init_context_opensfile)
-  )
-)
-// clang-format on
+
+Suite *make_context_test_suite() {
+  Suite *s = suite_create("context");
+  {
+    TCase *tc = tcase_create("init_context");
+    tcase_add_checked_fixture(tc, setup, teardown);
+    tcase_add_test(tc, defaults);
+    tcase_add_test(tc, opens_rcfile);
+    tcase_add_test(tc, explicitly_set_rcfile);
+    suite_add_tcase(s, tc);
+  }
+  return s;
+}
