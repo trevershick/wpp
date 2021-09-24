@@ -52,7 +52,6 @@ START_TEST(test_init_context_opensfile) {
     strcpy(c->rc_file, "$TEST_TMPDIR/file_to_open");
     ck_assert_int_eq(0, init_context(c));
     fgets(buffer, sizeof(buffer), c->file);
-    destroy_context(c);
     ck_assert_str_eq(buffer, "nothing special");
     destroy_context(c);
   }
