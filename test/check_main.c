@@ -7,8 +7,14 @@
 #include "src/context.h"
 #include "tests.h"
 
+struct Suite *make_cmdline_test_suite();
+struct Suite *make_context_test_suite();
+struct Suite *make_format_test_suite();
+struct Suite *make_rcfile_test_suite();
+
 int main(void) {
-  SRunner *sr = srunner_create(make_context_test_suite());
+  SRunner *sr = srunner_create(make_cmdline_test_suite());
+  srunner_add_suite(sr, make_context_test_suite());
   srunner_add_suite(sr, make_format_test_suite());
   srunner_add_suite(sr, make_rcfile_test_suite());
 

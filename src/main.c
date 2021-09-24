@@ -19,5 +19,7 @@ int main(int argc, char **argv) {
     || process_rcfile(context, handle_match);
   // clang-format on
   destroy_context(context);
+  if (result < 0)
+    return 0;
   return result;
 }

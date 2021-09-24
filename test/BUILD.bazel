@@ -5,6 +5,7 @@ cc_test(
     srcs = [
         "check_main.c",
         "format_test.c",
+        "cmdline_test.c",
         "rcfile_test.c",
         "context_test.c",
         "tests.c",

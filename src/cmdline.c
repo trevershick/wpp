@@ -58,30 +58,28 @@ int parse_arguments(int argc, char **argv, struct Context *context) {
     case 'd':
       context->debug = stdout;
       break;
-    case 'h':
-      print_usage(argv[0], context->out);
-      exit(0);
+    case 'f':
+      strncpy(context->cwd, optarg, sizeof(context->cwd));
       break;
     case 'g':
       generate_sample_file(context->out);
-      exit(0);
-      break;
+      return -1;
+    case 'h':
+      print_usage(argv[0], context->out);
+      return -1;
     case 'r':
       strncpy(context->rc_file, optarg, sizeof(context->rc_file));
       break;
     case 's':
       strncpy(context->section, optarg, sizeof(context->section));
       break;
-    case 'f':
-      strncpy(context->cwd, optarg, sizeof(context->cwd));
-      break;
     case '?':
-      if (optopt == 's') {
+      if (optopt == 's' || optopt == 'f' || optopt == 'r') {
         fprintf(context->err, "Option -%c requires an argument.\n", optopt);
       } else if (isprint(optopt)) {
-        fprintf(context->err, "Unknown option `-%c'.\n", optopt);
+        fprintf(context->err, "Unknown option '-%c'.\n", optopt);
       } else {
-        fprintf(context->err, "Unknown option character `\\x%x'.\n", optopt);
+        fprintf(context->err, "Unknown option character '\\x%x'.\n", optopt);
       }
       return 1;
     default:

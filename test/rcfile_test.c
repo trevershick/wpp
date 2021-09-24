@@ -37,7 +37,7 @@ START_TEST(in_folder) {
   context->file = fmemopen(rccontent, strlen(rccontent), "r");
   process_rcfile(context, handle);
   ck_assert_str_eq("betty", actual_directive);
-  ck_assert_str_eq("", err);
+  ck_assert_stderr_empty();
 }
 END_TEST
 
@@ -47,7 +47,7 @@ START_TEST(in_child_of_folder) {
   context->file = fmemopen(rccontent, strlen(rccontent), "r");
   process_rcfile(context, handle);
   ck_assert_str_eq("wilma", actual_directive);
-  ck_assert_str_eq("", err);
+  ck_assert_stderr_empty();
 }
 END_TEST
 
@@ -57,7 +57,7 @@ START_TEST(in_folder_section_2) {
   context->file = fmemopen(rccontent, strlen(rccontent), "r");
   process_rcfile(context, handle);
   ck_assert_str_eq("bone", actual_directive);
-  ck_assert_str_eq("", err);
+  ck_assert_stderr_empty();
 }
 END_TEST
 
@@ -68,14 +68,14 @@ START_TEST(no_match) {
   context->file = fmemopen(rccontent, strlen(rccontent), "r");
   process_rcfile(context, handle);
   ck_assert_str_eq("unmatched", actual_directive);
-  ck_assert_str_eq("", err);
+  ck_assert_stderr_empty();
 }
 END_TEST
 
 START_TEST(generate_sample) {
   generate_sample_file(context->out);
-  ck_assert(strstr(out, "[testfiles]"));
-  ck_assert_str_eq("", err);
+  ck_assert_stdout_contains("[testfiles]");
+  ck_assert_stderr_empty();
 }
 END_TEST
 
