@@ -3,6 +3,6 @@
 
 #include "context.h"
 
-void handle_match(struct Context*, const char* directive);
+void handle_match(struct Context *, const char *directive);
 
 #endif

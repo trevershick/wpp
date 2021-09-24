@@ -3,8 +3,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "check_macros.h"
 #include "src/format.h"
+#include "tests.h"
 
 START_TEST(test_is_section_header) {
   ck_assert_int_eq(0, is_section_header("test"));

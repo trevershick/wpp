@@ -4,14 +4,16 @@ cc_test(
     name = "tests",
     srcs = [
         "check_main.c",
-        "check_macros.h",
         "format_test.c",
+        "rcfile_test.c",
         "context_test.c",
+        "tests.c",
+        "check_macros.h",
+        "tests.h",
     ],
     deps = [
       "//:libcheck",
-      "//src:format",
-      "//src:context",
+      "//src:libs",
     ],
     linkopts = select({
         ":linux": ["-lrt","-lpthread"],

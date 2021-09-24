@@ -1,12 +1,19 @@
 #include "context.h"
 
-#include <libgen.h>
 #include <errno.h>
+#include <libgen.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <wordexp.h>
-#include <sys/stat.h>
+
+struct Context *new_context() {
+  struct Context *ctx = calloc(1, sizeof(struct Context));
+  ctx->err = stderr;
+  ctx->out = stdout;
+  return ctx;
+}
 
 void destroy_context(struct Context *context) {
   if (context->file) {
@@ -16,30 +23,33 @@ void destroy_context(struct Context *context) {
 
 int resolve_cwd(struct Context *context) {
   if (strlen(context->cwd)) {
-   struct stat s;
+    struct stat s;
     char buffer[PATH_MAX];
     if (realpath(context->cwd, buffer) == NULL) {
-      fprintf(stderr, "couldn't resolve absolute path for %s", context->cwd);
+      fprintf(context->err, "couldn't resolve absolute path for %s",
+              context->cwd);
       return 1;
     }
     strncpy(context->cwd, buffer, sizeof(context->cwd));
 
     if (stat(context->cwd, &s)) {
-      fprintf(stderr, "file/directory does not exists %s", context->cwd);
+      fprintf(context->err, "file/directory does not exists %s", context->cwd);
       return 1;
     }
 
     if ((s.st_mode & S_IFREG) == S_IFREG) {
       // it's a regular file, we need to get the parent directory
-      char* dname = dirname(context->cwd);
+      char *dname = dirname(context->cwd);
       if (!dname) {
-        fprintf(stderr, "Unable to determine the directory for %s", context->cwd);
+        fprintf(context->err, "Unable to determine the directory for %s",
+                context->cwd);
         return 1;
       }
       strncpy(context->cwd, dname, sizeof(context->cwd));
     } else if ((s.st_mode & S_IFDIR) != S_IFDIR) {
-        fprintf(stderr, "Don't know what the specified file is %s", context->cwd);
-        return 1;
+      fprintf(context->err, "Don't know what the specified file is %s",
+              context->cwd);
+      return 1;
     }
   } else {
     if (getcwd(context->cwd, sizeof(context->cwd)) == NULL) {
@@ -59,14 +69,14 @@ int resolve_rcfile(struct Context *context) {
   wordexp_t we = {0};
   int wordexp_err;
   if ((wordexp_err = wordexp(context->rc_file, &we, 0))) {
-    fprintf(stderr, "expansion error on %s - %d\n", context->rc_file,
+    fprintf(context->err, "expansion error on %s - %d\n", context->rc_file,
             wordexp_err);
     return 1;
   }
   strncpy(context->rc_file, we.we_wordv[0], sizeof(context->rc_file));
 
   if ((context->file = fopen(context->rc_file, "r")) == NULL) {
-    fprintf(stderr, "error opening %s: %s\n", context->rc_file,
+    fprintf(context->err, "error opening %s: %s\n", context->rc_file,
             strerror(errno));
     wordfree(&we);
     return 1;

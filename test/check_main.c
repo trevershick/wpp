@@ -4,21 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ADD_SUITE(runner, factory_method)                                      \
-  {                                                                            \
-    struct Suite *suite = factory_method();                                    \
-    srunner_add_suite(runner, suite);                                          \
-  }
-
-struct Suite *make_format_test_suite();
-struct Suite *make_context_test_suite();
+#include "src/context.h"
+#include "tests.h"
 
 int main(void) {
-  struct Suite *s = make_format_test_suite();
-  SRunner *sr = srunner_create(s);
-
-  s = make_context_test_suite();
-  ADD_SUITE(sr, make_context_test_suite);
+  SRunner *sr = srunner_create(make_context_test_suite());
+  srunner_add_suite(sr, make_format_test_suite());
+  srunner_add_suite(sr, make_rcfile_test_suite());
 
   char xml_output[PATH_MAX];
   memset(xml_output, 0, PATH_MAX);

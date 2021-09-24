@@ -1,11 +1,32 @@
-default: test
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+
+SRCS = $(wildcard src/*.c)
+HDRS = $(wildcard src/*.h)
+TEST_SRCS = $(wildcard test/*.c)
+TEST_HDRS = $(wildcard test/*.h)
+ALL_SRCS = $(SRCS) $(TEST_SRCS)
+ALL_HDRS = $(HDRS) $(TEST_HDRS)
+BAZEL_SRCS = $(wildcard *.bazel) $(wildcard src/*.bazel) $(wildcard test/*.bazel)
+
+#$(info "bazel sources is ${BAZEL_SRCS}")
+
+default: all
 
 TEST_OPTS := --test_output=all --sandbox_debug --test_verbose_timeout_warnings
 TESTS 		:= //...
 
-.PHONY: wp test debug lldb all
+.PHONY: wp test debug lldb all format
 
-all: wp test
+all: wp test compile_commands.json
+
+format:
+	clang-format -i $(ALL_SRCS) $(ALL_HDRS)
+
+bin/bazel-compdb:
+	./bin/bootstrap-bazel-compdb
+
+compile_commands.json: bin/bazel-compdb $(BAZEL_SRCS)
+	./bin/bazel-compdb
 
 wp:
 	bazel build //src:wp

@@ -6,12 +6,15 @@
 
 struct Context {
   FILE *file;
+  FILE *err;
+  FILE *out;
   char section[64];
   char cwd[PATH_MAX];
   char rc_file[PATH_MAX];
   char matched_matcher[PATH_MAX];
 };
 
-int init_context(struct Context*);
-void destroy_context(struct Context*);
+struct Context *new_context();
+int init_context(struct Context *);
+void destroy_context(struct Context *);
 #endif

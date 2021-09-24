@@ -4,9 +4,9 @@
 #include "context.h"
 #include "stdio.h"
 
-typedef void(*fn_t)(struct Context*, const char*);
+typedef void (*fn_t)(struct Context *, const char *);
 
 int process_rcfile(struct Context *, fn_t);
-void generate_sample_file(FILE*);
+void generate_sample_file(FILE *);
 
 #endif

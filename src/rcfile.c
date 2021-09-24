@@ -1,11 +1,11 @@
 #include "rcfile.h"
 
-#include <wordexp.h>
 #include <string.h>
+#include <wordexp.h>
 
 #include "format.h"
 
-void generate_sample_file(FILE* fp) {
+void generate_sample_file(FILE *fp) {
   fprintf(fp, "[workspaces]\n");
   fprintf(fp, "~/workspaces/primary=<first_dir>\n");
   fprintf(fp, "\n");
@@ -49,21 +49,21 @@ int process_rcfile(struct Context *context, fn_t fn) {
     if ((nlpos = strchr(line, '\n')) != NULL) {
       *nlpos = '\0';
     } else {
-      fprintf(stderr, "directive format error, expected newline\n");
+      fprintf(context->err, "directive format error, expected newline\n");
       return 1;
     }
 
     if ((eqpos = strchr(line, '=')) != NULL) {
       *eqpos = '\0';
     } else {
-      fprintf(stderr, "directive format error, expected '='\n");
+      fprintf(context->err, "directive format error, expected '='\n");
       return 1;
     }
 
     // we're expanding the line up to the '=' if there is one
     // because we replaced = with 0
     if ((wordexp_err = wordexp(line, &we, WRDE_REUSE))) {
-      fprintf(stderr, "expansion error - %d\n", wordexp_err);
+      fprintf(context->err, "expansion error - %d\n", wordexp_err);
       return 1;
     }
 
