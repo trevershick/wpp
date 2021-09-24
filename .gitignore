@@ -1,3 +1,7 @@
 bazel-*
 tests.tap
 tests.xml
+.cache/
+compile_commands.json
+bin/bazel-compilation-database-*
+bin/bazel-compdb

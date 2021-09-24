@@ -1,0 +1,12 @@
+INSTALL_DIR=$(dirname $0)
+VERSION="0.5.2"
+
+# Download and symlink.
+(
+  cd "${INSTALL_DIR}" \
+  && rm -rf bazel-compilation-database-0.5.2 \
+  && rm -f bazel-compdb \
+  && curl -L "https://github.com/grailbio/bazel-compilation-database/archive/${VERSION}.tar.gz" | tar -xz \
+  && ln -s bazel-compilation-database-${VERSION}/generate.py bazel-compdb \
+  && chmod a+x bazel-compdb
+)
