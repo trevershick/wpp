@@ -21,6 +21,7 @@ void print_usage(char *prog, FILE *fp) {
   fprintf(fp, "%s -s <section> [options]\n", prog);
   fprintf(fp, "\n");
   fprintf(fp, "  -h               show list of command-line options\n");
+  fprintf(fp, "  -d               show debug output\n");
   fprintf(fp, "  -g               generate a sample rc file\n");
   fprintf(fp, "\n");
   fprintf(fp, "CONFIG OPTIONS\n");
@@ -52,8 +53,11 @@ int parse_arguments(int argc, char **argv, struct Context *context) {
     exit(0);
   }
 
-  while ((c = getopt(argc, argv, "ghs:r:f:")) != -1) {
+  while ((c = getopt(argc, argv, "dghs:r:f:")) != -1) {
     switch (c) {
+    case 'd':
+      context->debug = stdout;
+      break;
     case 'h':
       print_usage(argv[0], context->out);
       exit(0);

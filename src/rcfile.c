@@ -27,10 +27,20 @@ int process_rcfile(struct Context *context, fn_t fn) {
   // then read only up to the next section
 
   int in_section = 0;
+  int lineno = 0;
   while (result && (linelen = getline(&line, &linecap, context->file)) > 0) {
+    lineno++;
+
+    // skip empty lines
+    if (*line == '\n' && strlen(line) == 1)
+      continue;
+
+    fprintf(context->debug, "line=%s\n", line);
     // find section
     if (!in_section) {
       in_section = is_matching_section_header(line, context->section);
+      fprintf(context->debug, "is matching section header? (%s:%d) %s\n",
+              context->section, in_section, line);
       continue;
     }
 
@@ -49,21 +59,24 @@ int process_rcfile(struct Context *context, fn_t fn) {
     if ((nlpos = strchr(line, '\n')) != NULL) {
       *nlpos = '\0';
     } else {
-      fprintf(context->err, "directive format error, expected newline\n");
+      fprintf(context->err,
+              "directive format error, expected newline in line %d\n", lineno);
       return 1;
     }
 
     if ((eqpos = strchr(line, '=')) != NULL) {
       *eqpos = '\0';
     } else {
-      fprintf(context->err, "directive format error, expected '='\n");
+      fprintf(context->err, "directive format error, expected '=' in line %d\n",
+              lineno);
       return 1;
     }
 
     // we're expanding the line up to the '=' if there is one
     // because we replaced = with 0
     if ((wordexp_err = wordexp(line, &we, WRDE_REUSE))) {
-      fprintf(context->err, "expansion error - %d\n", wordexp_err);
+      fprintf(context->err, "expansion error %d on line %d\n", wordexp_err,
+              lineno);
       return 1;
     }
 
@@ -71,10 +84,19 @@ int process_rcfile(struct Context *context, fn_t fn) {
       // if the cwd is < the current line's matcher just exit, it can't match
       continue;
     }
+
+    fprintf(context->debug, "comparing %s to %s\n", context->cwd,
+            we.we_wordv[0]);
+    if (strncmp(context->cwd, we.we_wordv[0], strlen(we.we_wordv[0]))) {
+      fprintf(context->debug, "  no match\n");
+      continue;
+    }
+    fprintf(context->debug, "  match\n");
     // copy the 'matched matcher' into the context
     strncpy(context->matched_matcher, we.we_wordv[0],
             sizeof(context->matched_matcher));
 
+    fprintf(context->debug, "calling callback with %s\n", eqpos + 1);
     fn(context, eqpos + 1);
     result = 0;
   }

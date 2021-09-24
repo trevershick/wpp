@@ -6,7 +6,7 @@
 #include "tests.h"
 
 START_TEST(test_init_context_usessetrcfile) {
-  struct Context *c = test_context();
+  struct Context *c = test_context(0);
   strcpy(c->rc_file, "~/trevers_rc");
   int result = init_context(c);
   ck_assert_msg(strstr(c->rc_file, "trevers_rc") != NULL,
@@ -21,7 +21,7 @@ START_TEST(test_init_context_usessetrcfile) {
 END_TEST
 
 START_TEST(test_init_context_default) {
-  struct Context *c = test_context();
+  struct Context *c = test_context(0);
   init_context(c);
   ck_assert_msg(strstr(c->rc_file, "workspaces.rc") != NULL,
                 "RC file should contain workspaces.rc but is '%s'", c->rc_file);
@@ -36,7 +36,7 @@ START_TEST(test_init_context_opensfile) {
   char buffer[80] = {0};
   // write a file
   {
-    struct Context *c = test_context();
+    struct Context *c = test_context(0);
     strcpy(c->rc_file, "$TEST_TMPDIR/file_to_open");
     ck_assert_int_eq(1, init_context(c));
     ck_assert(strstr(c->rc_file, "TEST") == NULL);
@@ -48,7 +48,7 @@ START_TEST(test_init_context_opensfile) {
   }
 
   {
-    struct Context *c = test_context();
+    struct Context *c = test_context(0);
     strcpy(c->rc_file, "$TEST_TMPDIR/file_to_open");
     ck_assert_int_eq(0, init_context(c));
     fgets(buffer, sizeof(buffer), c->file);

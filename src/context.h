@@ -8,6 +8,7 @@ struct Context {
   FILE *file;
   FILE *err;
   FILE *out;
+  FILE *debug;
   char section[64];
   char cwd[PATH_MAX];
   char rc_file[PATH_MAX];
