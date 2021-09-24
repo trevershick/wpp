@@ -13,7 +13,7 @@ http_archive(
       "-p1"
     ],
     patches = [
-      "//:0_15_2_junit.patch"
+      "//3rdparty/patches:libcheck_0_15_2_junit.patch",
     ],
 )
 

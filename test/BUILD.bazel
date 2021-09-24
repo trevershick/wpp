@@ -12,7 +12,7 @@ cc_test(
         "tests.h",
     ],
     deps = [
-      "//:libcheck",
+      "//3rdparty:libcheck",
       "//src:libs",
     ],
     linkopts = select({
