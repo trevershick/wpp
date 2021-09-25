@@ -42,3 +42,8 @@ lldb: debug
 test:
 	bazel test $(TEST_OPTS) $(TESTS)
 
+docker_build:
+	docker bulid -t docker_4_2_1 .
+
+docker_make:
+	docker run -it --rm --mount type=bind,source="$(PWD)",target=/app bazel_4_2_1 bash -c "cd /app && make"
