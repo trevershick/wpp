@@ -24,6 +24,7 @@ START_TEST(explicitly_set_rcfile) {
                 "RC file should have been 'expanded'");
   // should fail loading the file
   ck_assert_int_eq(1, result);
+  flush_fps(c);
   ck_assert_stderr_contains("error opening ");
 }
 END_TEST
@@ -35,6 +36,7 @@ START_TEST(defaults) {
   ck_assert_msg(strstr(c->rc_file, "~") == NULL,
                 "RC file should have been 'expanded'");
   ck_assert_msg(c->cwd[0] != 0, "CWD should be populated");
+  flush_fps(c);
   ck_assert_stderr_contains("error opening ");
 }
 END_TEST

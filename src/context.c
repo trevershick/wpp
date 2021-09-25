@@ -17,6 +17,7 @@ struct Context *new_context() {
 }
 
 void destroy_context(struct Context *ctx) {
+  if (!ctx) return;
   if (ctx->file) {
     fclose(ctx->file);
   }

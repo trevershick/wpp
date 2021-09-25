@@ -7,7 +7,7 @@
 #include "src/rcfile.h"
 #include "tests.h"
 
-static struct Context *context;
+static struct Context *ctx;
 static char *rccontent = "[section1]\n"
                          "/Users/barney=betty\n"
                          "/Users/fred=wilma\n"
@@ -19,12 +19,11 @@ static char actual_directive[PATH_MAX];
 static void setup() {
   memset(actual_directive, 0, sizeof(actual_directive));
   strcpy(actual_directive, "unmatched");
-  context = test_context(0);
+  ctx = test_context(0);
 }
 
 static void teardown() {
-  if (context)
-    destroy_context(context);
+  destroy_context(ctx);
 }
 
 static void handle(struct Context *ctx, const char *directive) {
@@ -32,48 +31,53 @@ static void handle(struct Context *ctx, const char *directive) {
 }
 
 START_TEST(in_folder) {
-  strncpy(context->section, "section1", sizeof(context->section));
-  strncpy(context->cwd, "/Users/barney", sizeof(context->cwd));
-  context->file = fmemopen(rccontent, strlen(rccontent), "r");
-  process_rcfile(context, handle);
+  strncpy(ctx->section, "section1", sizeof(ctx->section));
+  strncpy(ctx->cwd, "/Users/barney", sizeof(ctx->cwd));
+  ctx->file = fmemopen(rccontent, strlen(rccontent), "r");
+  process_rcfile(ctx, handle);
   ck_assert_str_eq("betty", actual_directive);
+  flush_fps(ctx);
   ck_assert_stderr_empty();
 }
 END_TEST
 
 START_TEST(in_child_of_folder) {
-  strncpy(context->section, "section1", sizeof(context->section));
-  strncpy(context->cwd, "/Users/fred/nested", sizeof(context->cwd));
-  context->file = fmemopen(rccontent, strlen(rccontent), "r");
-  process_rcfile(context, handle);
+  strncpy(ctx->section, "section1", sizeof(ctx->section));
+  strncpy(ctx->cwd, "/Users/fred/nested", sizeof(ctx->cwd));
+  ctx->file = fmemopen(rccontent, strlen(rccontent), "r");
+  process_rcfile(ctx, handle);
   ck_assert_str_eq("wilma", actual_directive);
+  flush_fps(ctx);
   ck_assert_stderr_empty();
 }
 END_TEST
 
 START_TEST(in_folder_section_2) {
-  strncpy(context->cwd, "/Users/dino", sizeof(context->cwd));
-  strncpy(context->section, "section2", sizeof(context->section));
-  context->file = fmemopen(rccontent, strlen(rccontent), "r");
-  process_rcfile(context, handle);
+  strncpy(ctx->cwd, "/Users/dino", sizeof(ctx->cwd));
+  strncpy(ctx->section, "section2", sizeof(ctx->section));
+  ctx->file = fmemopen(rccontent, strlen(rccontent), "r");
+  process_rcfile(ctx, handle);
   ck_assert_str_eq("bone", actual_directive);
+  flush_fps(ctx);
   ck_assert_stderr_empty();
 }
 END_TEST
 
 START_TEST(no_match) {
-  strncpy(context->section, "section1", sizeof(context->section));
+  strncpy(ctx->section, "section1", sizeof(ctx->section));
   // dino is defined in section 2
-  strncpy(context->cwd, "/Users/dino", sizeof(context->cwd));
-  context->file = fmemopen(rccontent, strlen(rccontent), "r");
-  process_rcfile(context, handle);
+  strncpy(ctx->cwd, "/Users/dino", sizeof(ctx->cwd));
+  ctx->file = fmemopen(rccontent, strlen(rccontent), "r");
+  process_rcfile(ctx, handle);
   ck_assert_str_eq("unmatched", actual_directive);
+  flush_fps(ctx);
   ck_assert_stderr_empty();
 }
 END_TEST
 
 START_TEST(generate_sample) {
-  generate_sample_file(context->out);
+  generate_sample_file(ctx->out);
+  flush_fps(ctx);
   ck_assert_stdout_contains("[testfiles]");
   ck_assert_stderr_empty();
 }
