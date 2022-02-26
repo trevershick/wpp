@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "src/format.h"
+#include "format.h"
 #include "tests.h"
 
 START_TEST(is_header) {

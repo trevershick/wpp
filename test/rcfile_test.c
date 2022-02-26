@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "src/rcfile.h"
+#include "rcfile.h"
 #include "tests.h"
 
 static struct Context *ctx;
@@ -22,9 +22,7 @@ static void setup() {
   ctx = test_context(0);
 }
 
-static void teardown() {
-  destroy_context(ctx);
-}
+static void teardown() { destroy_context(ctx); }
 
 static void handle(struct Context *ctx, const char *directive) {
   strncpy(actual_directive, directive, sizeof(actual_directive));

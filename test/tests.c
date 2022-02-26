@@ -3,7 +3,7 @@
 char out[4096];
 char err[4096];
 
-void flush_fps(struct Context* ctx) {
+void flush_fps(struct Context *ctx) {
   fflush(ctx->err);
   fflush(ctx->out);
   if (ctx->debug)

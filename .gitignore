@@ -1,4 +1,6 @@
 bazel-*
+build
+.DS_Store
 tests.tap
 tests.xml
 .cache/

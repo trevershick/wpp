@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "src/context.h"
+#include "context.h"
 #include "tests.h"
 
 struct Suite *make_cmdline_test_suite();
@@ -33,7 +33,7 @@ int main(void) {
   fprintf(stdout, "Writing test output to : %s\n", xml_output);
   // srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, xml_output);
-  srunner_set_xml_format(sr, CK_XML_FORMAT_JUNIT);
+  // srunner_set_xml_format(sr, CK_XML_FORMAT_JUNIT);
   srunner_run_all(sr, CK_VERBOSE /*CK_NORMAL*/);
   int number_failed = srunner_ntests_failed(sr);
   srunner_free(sr);

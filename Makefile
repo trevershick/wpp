@@ -1,49 +1,51 @@
-rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
-
-SRCS = $(wildcard src/*.c)
-HDRS = $(wildcard src/*.h)
-TEST_SRCS = $(wildcard test/*.c)
-TEST_HDRS = $(wildcard test/*.h)
-ALL_SRCS = $(SRCS) $(TEST_SRCS)
-ALL_HDRS = $(HDRS) $(TEST_HDRS)
-BAZEL_SRCS = $(wildcard *.bazel) $(wildcard src/*.bazel) $(wildcard test/*.bazel)
-
+#rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+#SRCS = $(wildcard src/*.c)
+#HDRS = $(wildcard src/*.h)
 #$(info "bazel sources is ${BAZEL_SRCS}")
 
-default: all
+default: cmake
 
-TEST_OPTS := --test_output=all --sandbox_debug --test_verbose_timeout_warnings
-TESTS 		:= //...
+.PHONY: all format cmake install
 
-.PHONY: wp test debug lldb all format
+all: clean format cmake compile_commands.json
 
-all: wp test compile_commands.json
+clean:
+	rm -rf build
+	rm -f compile_commands.json
+
+build:
+	cmake -B build .
+
+cmake: build
+	cmake --build build
+
+install:
+	cmake --build build -t install
 
 format:
-	clang-format -i $(ALL_SRCS) $(ALL_HDRS)
+	clang-format -i \
+		src/lib/*.h \
+		src/lib/*.c \
+		src/cmd/*.c \
+		test/*.h \
+		test/*.c
+	cmake-format -i CMakeLists.txt
 
-bin/bazel-compdb:
-	./bin/bootstrap-bazel-compdb
+build/compile_commands.json: build cmake
 
-compile_commands.json: bin/bazel-compdb $(BAZEL_SRCS)
-	./bin/bazel-compdb
-
-wp:
-	bazel build //src:wp
-
+compile_commands.json: build/compile_commands.json
+	ln -sf $@ $<
 # for mac, we have to preserve the sandbox because the debug symbols are created
 # in the sandbox and lldb can't find them if the sandbox disappears
-debug:
-	bazel build --sandbox_debug -c dbg --strip=never //src:wp
-
-lldb: debug
-	lldb --one-line "b main" ./bazel-bin/src/wp -- -s testfiles -r $(PWD)/workspaces.rc
-
+#debug:
+#	bazel build --sandbox_debug -c dbg --strip=never //src:wp
+#
+#lldb: debug
+#	lldb --one-line "b main" ./bazel-bin/src/wp -- -s testfiles -r $(PWD)/workspaces.rc
+#
 test:
-	bazel test $(TEST_OPTS) $(TESTS)
+	cmake --build build -t
 
 docker_build:
 	docker bulid -t docker_4_2_1 .
 
-docker_make:
-	docker run -it --rm --mount type=bind,source="$(PWD)",target=/app bazel_4_2_1 bash -c "cd /app && make"

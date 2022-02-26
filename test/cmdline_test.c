@@ -1,4 +1,4 @@
-#include "src/cmdline.h"
+#include "cmdline.h"
 
 #include <check.h>
 #include <string.h>

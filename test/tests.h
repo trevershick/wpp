@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "src/context.h"
+#include "context.h"
 
 extern char out[4096];
 extern char err[4096];
 
 struct Context *test_context(int debug);
-void flush_fps(struct Context*);
+void flush_fps(struct Context *);
 
 #define ck_assert_stderr_contains(value)                                       \
   ck_assert_msg(strstr(err, value), "expect %s (stderr) to contain %s", err,   \

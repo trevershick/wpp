@@ -1,4 +1,4 @@
-#include "src/context.h"
+#include "context.h"
 
 #include <check.h>
 #include <string.h>
