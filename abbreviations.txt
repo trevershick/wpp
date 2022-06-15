@@ -1,0 +1,17 @@
+iab Mu <C-e>MutexGuarded<std::string> m_state;<cr>
+iab Wa <C-e>WaitFor(kDefaultTimeout, [&]() { return true; });<cr>
+
+iab sptr <C-e>std::shared_ptr<string> ptr
+iab uptr <C-e>std::unique_ptr<string> ptr
+iab makes <C-e>std::make_shared<string>(tmp);<CR>
+iab makeu <C-e>std::make_unique<string>(tmp);<CR>
+iab #d #define
+iab #i #include ""<Left>
+iab co <C-e>std::cout << << std::endl;<esc>13<Left>i
+iab trace <C-e>TANIUM_CORE_LOG_TRACE(m_logger, );<esc>2<Left>i
+iab debug <C-e>TANIUM_CORE_LOG_DEBUG(m_logger, );<esc>2<Left>i
+iab info <C-e>TANIUM_CORE_LOG_INFO(m_logger, );<esc>2<Left>i
+iab warn <C-e>TANIUM_CORE_LOG_WARNING(m_logger, );<esc>2<Left>i
+iab error <C-e>TANIUM_CORE_LOG_ERROR(m_logger, );<esc>2<Left>i
+iab what <C-e>const auto what = WhatOfCaughtException();
+iab try <C-e>try<CR>{<CR>}<CR>catch (...)<CR>{<CR>const auto what = WhatOfCaughtException();<CR>TANIUM_CORE_LOG_ERROR(m_logger, what);<CR>}<CR><esc>7<Up>A<CR>
