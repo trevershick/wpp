@@ -41,8 +41,8 @@ add_executable(${CMAKE_PROJECT_NAME} ${${CMAKE_PROJECT_NAME}_sources})
 add_library(${CMAKE_PROJECT_NAME}lib ${${CMAKE_PROJECT_NAME}_lib_sources})
 add_executable(${CMAKE_PROJECT_NAME}_tests ${${CMAKE_PROJECT_NAME}_test_sources})
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${CHECK_LIBRARIES} ${CMAKE_PROJECT_NAME}lib)
-target_link_libraries(${CMAKE_PROJECT_NAME}_tests PUBLIC ${CHECK_LIBRARIES} ${CMAKE_PROJECT_NAME}lib)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${CHECK_LIBRARIES} ${CMAKE_PROJECT_NAME}lib m)
+target_link_libraries(${CMAKE_PROJECT_NAME}_tests PUBLIC ${CHECK_LIBRARIES} ${CMAKE_PROJECT_NAME}lib m subunit)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/src/cmd)
 target_include_directories(${CMAKE_PROJECT_NAME}lib PUBLIC ${CMAKE_SOURCE_DIR}/src/lib)
@@ -73,6 +73,5 @@ else()
     -Wextra
     -Wpedantic
     -Werror
-    -Wno-unused-parameter
   )
 endif()

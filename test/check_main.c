@@ -29,7 +29,9 @@ int main(void) {
 
   char output_path[PATH_MAX];
   memset(output_path, 0, PATH_MAX);
-  realpath(output_path, xml_output);
+  if (!realpath(output_path, xml_output)) {
+    exit(1);
+  }
   fprintf(stdout, "Writing test output to : %s\n", xml_output);
   // srunner_set_tap(sr, "tests.tap");
   srunner_set_xml(sr, xml_output);
